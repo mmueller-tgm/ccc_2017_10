@@ -34,11 +34,36 @@ class main:
 
     @staticmethod
     def check_if_valid(aid):
-        if re.search('CAT*\d\d\w{10}', aid):
+        if re.search('CAT\d\d\w{10}', aid):
             valid = True
-            for char in ''.join([c for c in aid[3:] if c.isupper()]):
-                if char.lower() not in aid[3:]:
-                    valid = False
+            chars = {}
+            acc_id = aid[5:] + "CAT00"
+            check = 0
+
+            for c in acc_id:
+                check += ord(c)
+            check = 98-check%97
+
+            if not check == int(aid[3:5]):
+                print(aid)
+                valid = False
+
+            for char in aid[5:]:
+                if chars.get(char):
+                    chars[char] += 1
+                else:
+                    chars[char] = 1
+
+            for char in chars.keys():
+                if char.isupper():
+                    print(aid)
+                    if chars[char] != chars.get(char.lower()):
+                        valid = False
+                else:
+                    print(aid)
+                    if chars[char] != chars.get(char.upper()):
+                        valid = False
+
             if valid:
                 return True
         return False
